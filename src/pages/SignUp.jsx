@@ -30,7 +30,7 @@ export default function SignUp() {
       [e.target.id]: e.target.value,
     }));
   }
-  async function onSubmit(e) {
+  async function onSubmit(e) {debugger
     e.preventDefault();
     try {
       const auth = getAuth();
@@ -42,6 +42,7 @@ export default function SignUp() {
       updateProfile(auth.currentUser, {
         displayName: name,
       });
+      
       const user = (await userCredential).user;
       const formDataCopy = { ...formData };
       delete formDataCopy.password;
