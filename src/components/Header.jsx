@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import {getAuth, onAuthStateChanged} from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Header() {
   const [pageState, setPageState] = useState("Sign In");
@@ -10,18 +10,17 @@ export default function Header() {
 
   const navigate = useNavigate();
 
- const auth=getAuth()
+  const auth = getAuth();
 
- useEffect(()=>{
-onAuthStateChanged(auth,user=>{
-  if(user){
-    setPageState('Profile')
-  }else{
-    setPageState('Sign In')
-  }
-})
-
- },[auth])
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPageState("Profile");
+      } else {
+        setPageState("Sign In");
+      }
+    });
+  }, [auth]);
 
   function pathMatchRoute(route) {
     debugger;
@@ -31,7 +30,7 @@ onAuthStateChanged(auth,user=>{
   }
 
   return (
-    <div className="bg-white border-b shadow-sm sticky top-0 z-50">
+    <div className="bg-white border-b shadow-sm sticky top-0 z-40">
       <header className="flex justify-between items-center px-3 max-w-6xl mx-auto">
         <div>
           <img
