@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import {getAuth, onAuthStateChanged} from 'firebase/auth'
+
 export default function Header() {
+  const [pageState, setPageState] = useState("Sign In");
+
   const location = useLocation();
 
   const navigate = useNavigate();
 
-  console.log(location.pathname);
+ const auth=getAuth()
+
+ useEffect(()=>{
+onAuthStateChanged(auth,user=>{
+  if(user){
+    setPageState('Profile')
+  }else{
+    setPageState('Sign In')
+  }
+})
+
+ },[auth])
 
   function pathMatchRoute(route) {
+    debugger;
     if (route === location.pathname) {
       return true;
     }
@@ -29,7 +46,7 @@ export default function Header() {
           <ul className="flex space-x-10">
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute("/") && "text-black border-b-red-500"
+                pathMatchRoute("/") && "text-yellow-950 border-b-red-1000"
               }`}
               onClick={() => navigate("/")}
             >
@@ -37,7 +54,7 @@ export default function Header() {
             </li>
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute("/offers") && "text-black border-b-red-500"
+                pathMatchRoute("/offers") && "text-yellow-950 border-b-red-1000"
               }`}
               onClick={() => navigate("/offers")}
             >
@@ -45,12 +62,12 @@ export default function Header() {
             </li>
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute("/sign-in") && "text-black border-b-red-500"
+                (pathMatchRoute("/sign-in") || pathMatchRoute("/profile")) &&
+                "text-yellow-950 border-b-red-1000 "
               }`}
               onClick={() => navigate("/sign-in")}
-              
             >
-              Sign in
+              {pageState}
             </li>
           </ul>
         </div>
