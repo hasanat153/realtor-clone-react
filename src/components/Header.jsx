@@ -23,7 +23,7 @@ export default function Header() {
   }, [auth]);
 
   function pathMatchRoute(route) {
-    debugger;
+
     if (route === location.pathname) {
       return true;
     }
