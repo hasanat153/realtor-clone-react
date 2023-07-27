@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Spinner from "../components/Spinner";
 
+import { FaShare } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
   EffectFade,
@@ -11,14 +12,16 @@ import SwiperCore, {
   Navigation,
   Pagination,
 } from "swiper";
-import 'swiper/css/bundle';
-
+import "swiper/css/bundle";
 
 export default function Listing() {
   const params = useParams();
   const [listing, setListing] = useState(null);
 
   const [loading, setLoading] = useState(true);
+
+  const [shareLinkcopy, setShareLinkcopy] = useState(false);
+
   SwiperCore.use([Autoplay, Navigation, Pagination]);
 
   useEffect(() => {
@@ -46,20 +49,38 @@ export default function Listing() {
         pagination={{ type: "progressbar" }}
         effect="fade"
         modules={[EffectFade]}
-        autoplay={{delay:3000}}
+        autoplay={{ delay: 3000 }}
       >
         {listing.imgUrls.map((url, index) => {
-        return  <SwiperSlide key={index}>
-            <div
-              className="relative w-full overflow-hidden h-[300px]"
-              style={{
-                background: `url(${listing.imgUrls[index]}) center no-repeat`,
-             backgroundSize:"cover"
-              }}
-            ></div>
-          </SwiperSlide>;
+          return (
+            <SwiperSlide key={index}>
+              <div
+                className="relative w-full overflow-hidden h-[300px]"
+                style={{
+                  background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                  backgroundSize: "cover",
+                }}
+              ></div>
+            </SwiperSlide>
+          );
         })}
       </Swiper>
+
+      <div
+        className="fixed top-[13%] right-3 z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center"
+        onClick={() => {
+          navigator.clipboard.writeText(window.location.href);
+          setShareLinkcopy(true);
+          setTimeout(() => {
+            setShareLinkcopy(false);
+          }, 2000);
+        }}
+      >
+        <FaShare className="text-lg text-slate-500" />
+      </div>
+      {shareLinkcopy && (
+        <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white p-2 z-10">Linked copied</p>
+      )}
     </main>
   );
 }
