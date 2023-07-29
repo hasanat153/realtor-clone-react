@@ -4,7 +4,16 @@ import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Spinner from "../components/Spinner";
 
-import { FaMapMarkerAlt, FaShare,FaBed,FaBath, FaParking, FaChair } from "react-icons/fa";
+import { getAuth } from "firebase/auth";
+
+import {
+  FaMapMarkerAlt,
+  FaShare,
+  FaBed,
+  FaBath,
+  FaParking,
+  FaChair,
+} from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {
   EffectFade,
@@ -13,14 +22,19 @@ import SwiperCore, {
   Pagination,
 } from "swiper";
 import "swiper/css/bundle";
+import Contact from "./Contact";
 
 export default function Listing() {
+  const auth = getAuth();
+
   const params = useParams();
   const [listing, setListing] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
   const [shareLinkcopy, setShareLinkcopy] = useState(false);
+
+  const [contactLandloard, setContactLandlord] = useState(false);
 
   SwiperCore.use([Autoplay, Navigation, Pagination]);
 
@@ -85,7 +99,7 @@ export default function Listing() {
       )}
 
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg border-3 shadow-lg bg-white lg:space-x-5">
-        <div className=" w-full h-[200px] lg-[400px]">
+        <div className=" w-full">
           <p className="text-2xl font-bold mb-3 text-blue-900">
             {listing.name} - ${" "}
             {listing.offer
@@ -117,25 +131,39 @@ export default function Listing() {
             <span className="font-semibold"> Description -</span>
             {listing.description}
           </p>
-          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold">
-              <li className="flex items-center whitespace-nowrap">
-                <FaBed className="text-lg mr-1"/>
-                {+listing.bedrooms>1?`${listing.bedrooms} Beds`:"Bed"}
-              </li>
-              <li className="flex items-center whitespace-nowrap">
-                <FaBath className="text-lg mr-1"/>
-                {+listing.bathrooms>1?`${listing.bathrooms} Baths`:"Bath"}
-              </li>
-              <li className="flex items-center whitespace-nowrap">
-                <FaParking className="text-lg mr-1"/>
-                {listing.parking?"Parking Spot":"No Parking"}
-              </li>
-              <li className="flex items-center whitespace-nowrap">
-                <FaChair className="text-lg mr-1"/>
-                {listing.furnished?"Furnished":"Not Furnished"}
-              </li>
-
+          <ul className="flex items-center space-x-2 lg:space-x-10 text-sm font-semibold mb-6">
+            <li className="flex items-center whitespace-nowrap">
+              <FaBed className="text-lg mr-1" />
+              {+listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : "Bed"}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaBath className="text-lg mr-1" />
+              {+listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : "Bath"}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaParking className="text-lg mr-1" />
+              {listing.parking ? "Parking Spot" : "No Parking"}
+            </li>
+            <li className="flex items-center whitespace-nowrap">
+              <FaChair className="text-lg mr-1" />
+              {listing.furnished ? "Furnished" : "Not Furnished"}
+            </li>
           </ul>
+          {listing.userRef !== auth.currentUser?.uid && !contactLandloard && (
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  setContactLandlord(true);
+                }}
+                className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-900 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-150 ease-in-out"
+              >
+                Contact Landlord
+              </button>
+            </div>
+          )}
+          {contactLandloard && (
+            <Contact userRef={listing.userRef} listing={listing} />
+          )}
         </div>
         <div className=" w-full h-[200px] lg-[400px] z-10 overflow-x-hidden"></div>
       </div>
