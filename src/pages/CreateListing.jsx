@@ -107,7 +107,7 @@ const navigate=useNavigate()
       console.log(data);
 
       geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
-      geolocation.lag = data.results[0]?.geometry.location.lng ?? 0;
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
 
       location = data.status === "ZERO_RESULTS" && undefined;
 
@@ -117,7 +117,7 @@ const navigate=useNavigate()
         return;
       } else {
         geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
-        geolocation.lag = data.results[0]?.geometry.location.lng ?? 0;
+        geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
       }
     }
 
